@@ -69,10 +69,10 @@
     <None Include="shaders\3.3.shader.vs">
       <Filter>Source Files\shaders</Filter>
     </None>
-    <None Include="3.3.light_cube.fs">
+    <None Include="shaders\3.3.light_cube.fs">
       <Filter>Source Files\shaders</Filter>
     </None>
-    <None Include="3.3.light_cube.vs">
+    <None Include="shaders\3.3.light_cube.vs">
       <Filter>Source Files\shaders</Filter>
     </None>
   </ItemGroup>
