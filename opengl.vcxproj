@@ -159,8 +159,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Downloads\stb_image.h" />
-    <ClInclude Include="camera.h" />
-    <ClInclude Include="shader_s.h" />
+    <ClInclude Include="headers\camera.h" />
+    <ClInclude Include="headers\shader_s.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\Downloads\dirt.png" />
