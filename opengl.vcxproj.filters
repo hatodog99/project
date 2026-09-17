@@ -16,8 +16,8 @@
     <Filter Include="Resource Files\Textures">
       <UniqueIdentifier>{5e0b8a77-ca45-422c-a48f-f062e6edd710}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Shaders">
-      <UniqueIdentifier>{906beff2-f328-40dd-a035-02ebddb4c689}</UniqueIdentifier>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{f6549c8a-ebbd-47b7-888e-d0b80544bf1f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -63,17 +63,17 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\3.3.shader.fs">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="resources\shaders\3.3.light_cube.fs">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="shaders\3.3.shader.vs">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="resources\shaders\3.3.light_cube.vs">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="shaders\3.3.light_cube.fs">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="resources\shaders\3.3.shader.fs">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="shaders\3.3.light_cube.vs">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="resources\shaders\3.3.shader.vs">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

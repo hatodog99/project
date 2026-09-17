@@ -88,8 +88,8 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader shader("shaders/3.3.shader.vs", "shaders/3.3.shader.fs");
-    Shader lightCubeShader("shaders/3.3.light_cube.vs", "shaders/3.3.light_cube.fs");
+    Shader shader("resources/shaders/3.3.shader.vs", "resources/shaders/3.3.shader.fs");
+    Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,

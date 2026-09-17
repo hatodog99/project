@@ -174,10 +174,10 @@
     <Image Include="..\..\..\Downloads\wally_pokemon.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\3.3.light_cube.fs" />
-    <None Include="shaders\3.3.light_cube.vs" />
-    <None Include="shaders\3.3.shader.fs" />
-    <None Include="shaders\3.3.shader.vs" />
+    <None Include="resources\shaders\3.3.light_cube.fs" />
+    <None Include="resources\shaders\3.3.light_cube.vs" />
+    <None Include="resources\shaders\3.3.shader.fs" />
+    <None Include="resources\shaders\3.3.shader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
