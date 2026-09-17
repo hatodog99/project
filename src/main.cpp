@@ -1,13 +1,13 @@
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
+#include "../includes/glad/glad.h"
+#include "../includes/GLFW/glfw3.h"
 
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
+#include "../includes/glm/glm.hpp"
+#include "../includes/glm/gtc/matrix_transform.hpp"
+#include "../includes/glm/gtc/type_ptr.hpp"
 
-#include "headers/stb_image.h"
-#include "headers/shader_s.h"
-#include "headers/camera.h"
+#include "../headers/stb_image.h"
+#include "../headers/shader_s.h"
+#include "../headers/camera.h"
 
 #include <iostream>
 
