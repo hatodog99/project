@@ -66,7 +66,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "nijika", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "lighting", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -171,7 +171,7 @@ int main()
         processInput(window);
 
         // background
-        glClearColor(0.085f, 0.085f, 0.085f, 1.0f);
+        glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // render cube
@@ -309,15 +309,24 @@ void printInput(Input input)
 {
     std::string currentInput = "";
 
-    if (input == ESC) currentInput = "ESC";
-    if (input == W) currentInput = "W";
-    if (input == S) currentInput = "S";
-    if (input == A) currentInput = "A";
-    if (input == D) currentInput = "D";
-    if (input == SPACE) currentInput = "SPACE";
-    if (input == LEFT_SHIFT) currentInput = "LEFT_SHIFT";
-    if (input == UP_ARROW) currentInput = "ARROW_UP";
-    if (input == DOWN_ARROW) currentInput = "ARROW_DOWN";
+    if (input == ESC) 
+        currentInput = "ESC";
+    if (input == W) 
+        currentInput = "W";
+    if (input == S) 
+        currentInput = "S";
+    if (input == A) 
+        currentInput = "A";
+    if (input == D) 
+        currentInput = "D";
+    if (input == SPACE) 
+        currentInput = "SPACE";
+    if (input == LEFT_SHIFT) 
+        currentInput = "LEFT_SHIFT";
+    if (input == UP_ARROW) 
+        currentInput = "ARROW_UP";
+    if (input == DOWN_ARROW) 
+        currentInput = "ARROW_DOWN";
 
     std::cout << "input: " << currentInput << std::endl;
 }
