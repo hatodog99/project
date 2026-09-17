@@ -72,12 +72,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\hatdo\Documents\opengl\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\hatdo\Documents\opengl\libraries;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\hatdo\source\repos\project\includes;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\hatdo\source\repos\project\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\hatdo\Documents\opengl\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\hatdo\Documents\opengl\libraries;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\hatdo\source\repos\project\includes;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\hatdo\source\repos\project\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
