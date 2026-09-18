@@ -32,6 +32,7 @@ public:
     glm::vec3 Front;
     glm::vec3 FrontFlat;
     glm::vec3 Up;
+    glm::vec3 UpFlat;
     glm::vec3 Right;
     glm::vec3 WorldUp;
     // euler Angles
@@ -80,9 +81,9 @@ public:
         if (direction == RIGHT)
             Position += Right * velocity;
         if (direction == UP)
-            Position += Up * velocity;
+            Position += WorldUp * velocity;
         if (direction == DOWN)
-            Position -= Up * velocity;
+            Position -= WorldUp * velocity;
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
