@@ -259,11 +259,16 @@ void toggleFullscreen(GLFWwindow* window)
         glfwGetWindowSize(window, &windowedWidth, &windowedHeight);
 
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        int monitorX, monitorY;
+        glfwGetMonitorPos(monitor, &monitorX, &monitorY);
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+
+        glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
+        glfwSetWindowMonitor(window, NULL, monitorX, monitorY, mode->width, mode->height, 0);
     }
     else
     {
+        glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_TRUE);
         glfwSetWindowMonitor(window, NULL, windowedX, windowedY, windowedWidth, windowedHeight, 0);
     }
     isFullscreen = !isFullscreen;
