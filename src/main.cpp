@@ -20,12 +20,14 @@ enum Input {
     SPACE,
     LEFT_SHIFT,
     UP_ARROW,
-    DOWN_ARROW
+    DOWN_ARROW,
+    F11
 };
 
-bool wasPressed[9] = { false };
+bool wasPressed[10] = { false };
 
 void frame_buffer_size_callback(GLFWwindow* window, int width, int height);
+void toggleFullscreen(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
@@ -41,6 +43,9 @@ unsigned int loadTexture
 // screen size
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+bool isFullscreen = false;
+int windowedX, windowedY, windowedWidth, windowedHeight;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -69,7 +74,10 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "lighting", NULL, NULL);
+    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_WIDTH, "lighting", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -95,6 +103,7 @@ int main()
     Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
 
     float vertices[] = {
+        // cube               // light
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -194,7 +203,9 @@ int main()
         lightingShader.setFloat("material.shininess", 32.0f);
 
         // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)fbWidth / (float)fbHeight, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
         lightingShader.setMat4("projection", projection);
         lightingShader.setMat4("view", view);
@@ -237,6 +248,25 @@ int main()
 void frame_buffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void toggleFullscreen(GLFWwindow* window)
+{
+    if (!isFullscreen)
+    {
+        // remember current windowed position/size before switching
+        glfwGetWindowPos(window, &windowedX, &windowedY);
+        glfwGetWindowSize(window, &windowedWidth, &windowedHeight);
+
+        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+    }
+    else
+    {
+        glfwSetWindowMonitor(window, NULL, windowedX, windowedY, windowedWidth, windowedHeight, 0);
+    }
+    isFullscreen = !isFullscreen;
 }
 
 void mouse_callback(GLFWwindow* window, double xPosIn, double yPosIn)
@@ -340,6 +370,13 @@ void processInput(GLFWwindow* window)
         mixCooldownTimer = 0.0f;
     }
     wasPressed[DOWN_ARROW] = downDown;
+
+    bool f11Down = glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS;
+    if (f11Down && !wasPressed[F11]) {// add F11 to your Input enum + bump wasPressed array size
+        printInput(F11);
+        toggleFullscreen(window);
+    }
+    wasPressed[F11] = f11Down;
 }
 
 void printInput(Input input)
@@ -364,6 +401,8 @@ void printInput(Input input)
         currentInput = "ARROW_UP";
     if (input == DOWN_ARROW) 
         currentInput = "ARROW_DOWN";
+    if (input == F11) 
+        currentInput = "F11";
 
     std::cout << "\rinput: " << currentInput << "          " << std::flush;
 }
