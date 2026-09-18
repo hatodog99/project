@@ -88,7 +88,7 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader shader("resources/shaders/3.3.shader.vs", "resources/shaders/3.3.shader.fs");
+    Shader shader("resources/shaders/3.3.lighting.vs", "resources/shaders/3.3.lighting.fs");
     Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
 
     float vertices[] = {
@@ -179,6 +179,7 @@ int main()
         shader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
         shader.setVec3("lightPos", lightPos);
+        shader.setVec3("viewPos", camera.Position);
 
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);

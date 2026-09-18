@@ -69,10 +69,10 @@
     <None Include="resources\shaders\3.3.light_cube.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="resources\shaders\3.3.shader.fs">
+    <None Include="resources\shaders\3.3.lighting.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="resources\shaders\3.3.shader.vs">
+    <None Include="resources\shaders\3.3.lighting.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
