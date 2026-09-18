@@ -23,6 +23,8 @@ enum Input {
     DOWN_ARROW
 };
 
+bool wasPressed[9] = { false };
+
 void frame_buffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -260,61 +262,84 @@ void mouse_callback(GLFWwindow* window, double xPosIn, double yPosIn)
 
 void processInput(GLFWwindow* window)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    bool escDown = glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS;
+    if (escDown)
     {
-        printInput(ESC);
+        if (!wasPressed[ESC]) printInput(ESC);
         glfwSetWindowShouldClose(window, true);
     }
+    wasPressed[ESC] = escDown;
 
     // movement
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    bool wDown = glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS;
+    if (wDown)
     {
-        printInput(W);
+        if (!wasPressed[W]) printInput(W);
         camera.ProcessKeyboard(FORWARD, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    wasPressed[W] = wDown;
+
+    bool sDown = glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS;
+    if (sDown)
     {
-        printInput(S);
+        if (!wasPressed[S]) printInput(S);
         camera.ProcessKeyboard(BACKWARD, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    wasPressed[S] = sDown;
+
+    bool aDown = glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS;
+    if (aDown)
     {
-        printInput(A);
+        if (!wasPressed[A]) printInput(A);
         camera.ProcessKeyboard(LEFT, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    wasPressed[A] = aDown;
+
+    bool dDown = glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS;
+    if (dDown)
     {
-        printInput(D);
+        if (!wasPressed[D]) printInput(D);
         camera.ProcessKeyboard(RIGHT, deltaTime);
     }
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-    {
-        printInput(SPACE);
-        camera.ProcessKeyboard(UP, deltaTime);
+    wasPressed[D] = dDown;
 
-    }
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+    bool spaceDown = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
+    if (spaceDown)
     {
-        printInput(LEFT_SHIFT);
+        if (!wasPressed[SPACE]) printInput(SPACE);
+        camera.ProcessKeyboard(UP, deltaTime);
+    }
+    wasPressed[SPACE] = spaceDown;
+
+    bool shiftDown = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
+    if (shiftDown)
+    {
+        if (!wasPressed[LEFT_SHIFT]) printInput(LEFT_SHIFT);
         camera.ProcessKeyboard(DOWN, deltaTime);
     }
+    wasPressed[LEFT_SHIFT] = shiftDown;
 
     // texture mix
     mixCooldownTimer += deltaTime;
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && mixCooldownTimer >= inputCooldownTime)
+    bool upDown = glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS;
+    if (upDown && mixCooldownTimer >= inputCooldownTime)
     {
-        printInput(UP_ARROW);
+        if (!wasPressed[UP_ARROW]) printInput(UP_ARROW);
         mixValue += 0.05f;
         if (mixValue >= 1.0f) mixValue = 1.0f;
         mixCooldownTimer = 0.0f;
     }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && mixCooldownTimer >= inputCooldownTime)
+    wasPressed[UP_ARROW] = upDown;
+
+    bool downDown = glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS;
+    if (downDown && mixCooldownTimer >= inputCooldownTime)
     {
-        printInput(DOWN_ARROW);
+        if (!wasPressed[DOWN_ARROW]) printInput(DOWN_ARROW);
         mixValue -= 0.05f;
         if (mixValue <= 0.0f) mixValue = 0.0f;
         mixCooldownTimer = 0.0f;
     }
+    wasPressed[DOWN_ARROW] = downDown;
 }
 
 void printInput(Input input)
@@ -340,7 +365,7 @@ void printInput(Input input)
     if (input == DOWN_ARROW) 
         currentInput = "ARROW_DOWN";
 
-    std::cout << "input: " << currentInput << std::endl;
+    std::cout << "\rinput: " << currentInput << "          " << std::flush;
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
