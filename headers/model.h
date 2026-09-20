@@ -5,15 +5,14 @@
 
 #include "../includes/glm/glm.hpp"
 #include "../includes/glm/gtc/matrix_transform.hpp"
-#include "../includes/assimp/Importer.hpp"
-#include "../includes/assimp/scene.h"
-#include "../includes/assimp/postprocess.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include "../headers/stb_image.h"
 #include "../headers/shader_s.h"
 #include "../headers/mesh.h"
 
-#include <windows.h>
 #include <cstdlib>
 
 #include <string>
