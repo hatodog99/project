@@ -109,7 +109,7 @@ int main()
     Model kita("resources/objects/kita-ikuyo/1.fbx");
     Model ryo("resources/objects/yamada-ryo/1.fbx");
 
-    float vertices[] = {
+    float lightCubeVertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
          0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -158,7 +158,7 @@ int main()
     glGenBuffers(1, &VBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(lightCubeVertices), lightCubeVertices, GL_STATIC_DRAW);
 
     glBindVertexArray(VAO);
 
@@ -183,11 +183,11 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // orbit
-        //float loopWidth = 1.0;
-        //lightPos.x = loopWidth * cos(glfwGetTime());
-        //lightPos.y = (loopWidth / 2) * sin(2 * glfwGetTime());
-        //lightPos.z = sin(glfwGetTime());
+        // move light
+        float loopWidth = 1.0;
+        lightPos.x = loopWidth * cos(glfwGetTime());
+        lightPos.y = (loopWidth / 2) * sin(2 * glfwGetTime());
+        lightPos.z = sin(glfwGetTime());
 
         // see polygons
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -198,14 +198,14 @@ int main()
         modelShader.setVec3("viewPos", camera.Position);
 
         // light properties
-        modelShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
-        modelShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
-        modelShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        modelShader.setVec3("light.ambient", glm::vec3(1.0f));
+        modelShader.setVec3("light.diffuse", glm::vec3(1.0f));
+        modelShader.setVec3("light.specular", glm::vec3(1.0f));
 
         // material properties
-        modelShader.setVec3("material.ambient", 0.1f, 0.1f, 0.1f);
-        modelShader.setVec3("material.diffuse", 1.0f, 1.0f, 1.0f);
-        modelShader.setVec3("material.specular", 0.50196078f, 0.50196078f, 0.50196078f);
+        modelShader.setVec3("material.ambient", glm::vec3(0.1f));
+        modelShader.setVec3("material.diffuse", glm::vec3(1.0f));
+        modelShader.setVec3("material.specular", glm::vec3(0.50196078f));
         modelShader.setFloat("material.shininess", 16.0f);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -214,56 +214,56 @@ int main()
         modelShader.setMat4("view", view);
 
         // 2B
-        // glm::mat4 model = glm::mat4(1.0f);
-        // model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
-        // model = glm::scale(model, glm::vec3(1.5f));
-        // modelShader.setMat4("model", model);
-        // twoB.Draw(modelShader);
-
-        // bocchi
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.1f));
+        model = glm::scale(model, glm::vec3(1.5f));
         modelShader.setMat4("model", model);
-        bocchi.Draw(modelShader);
+        twoB.Draw(modelShader);
 
-        // kita
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-1.8f, -0.5f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.1f));
-        modelShader.setMat4("model", model);
-        kita.Draw(modelShader);
+        //// bocchi
+        //glm::mat4 model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.08f));
+        //modelShader.setMat4("model", model);
+        //bocchi.Draw(modelShader);
 
-        // nijika
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-3.6f, -0.5f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.1f));
-        modelShader.setMat4("model", model);
-        nijika.Draw(modelShader);
+        //// kita
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(-1.8f, -0.5f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.08f));
+        //modelShader.setMat4("model", model);
+        //kita.Draw(modelShader);
 
-        // ryo
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-5.4f, -0.5f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.1f));
-        modelShader.setMat4("model", model);
-        ryo.Draw(modelShader);
+        //// nijika
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(-3.6f, -0.5f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.08f));
+        //modelShader.setMat4("model", model);
+        //nijika.Draw(modelShader);
+
+        //// ryo
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(-5.4f, -0.5f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.08f));
+        //modelShader.setMat4("model", model);
+        //ryo.Draw(modelShader);
 
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         // render light cube
-        // lightCubeShader.use();
-        // lightCubeShader.setVec3("lightColor", lightColor);
+        lightCubeShader.use();
+        lightCubeShader.setVec3("lightColor", lightColor);
 
-        // lightCubeShader.setMat4("projection", projection);
-        // lightCubeShader.setMat4("view", view);
-        // model = glm::mat4(1.0f);
-        // model = glm::translate(model, lightPos);
-        // model = glm::scale(model, glm::vec3(0.15f)); // a smaller cube
-        // lightCubeShader.setMat4("model", model);
+        lightCubeShader.setMat4("projection", projection);
+        lightCubeShader.setMat4("view", view);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.15f));
+        lightCubeShader.setMat4("model", model);
 
-        // glBindVertexArray(VAO);
-        // glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -316,7 +316,7 @@ void toggleFullscreen(GLFWwindow* window)
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-        glfwSetWindowMonitor(window, NULL, 0, 0, mode->width, mode->height, 0);
+        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
     }
     else
         glfwSetWindowMonitor(window, NULL, windowedX, windowedY, windowedWidth, windowedHeight, 0);
