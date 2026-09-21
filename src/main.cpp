@@ -102,8 +102,11 @@ int main()
     Shader modelShader("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading.fs");
     Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
 
-    Model ourModel("resources/objects/2b-in-kimono/28.glb");
-    //Model ourModel("resources/objects/ijichi-nijika/1.fbx");
+    Model twoB("resources/objects/2b-in-kimono/28.glb");
+    Model bocchi("resources/objects/goto-hitori/1.fbx");
+    Model nijika("resources/objects/ijichi-nijika/1.fbx");
+    Model kita("resources/objects/kita-ikuyo/1.fbx");
+    Model ryo("resources/objects/yamada-ryo/1.fbx");
 
     float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
@@ -180,10 +183,10 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // orbit
-        float loopWidth = 1.0;
-        lightPos.x = loopWidth * cos(glfwGetTime());
-        lightPos.y = (loopWidth / 2) * sin(2 * glfwGetTime());
-        lightPos.z = sin(glfwGetTime());
+        //float loopWidth = 1.0;
+        //lightPos.x = loopWidth * cos(glfwGetTime());
+        //lightPos.y = (loopWidth / 2) * sin(2 * glfwGetTime());
+        //lightPos.z = sin(glfwGetTime());
 
         // see polygons
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -194,7 +197,7 @@ int main()
         modelShader.setVec3("viewPos", camera.Position);
 
         // light properties
-        modelShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f); // note that all light colors are set at full intensity
+        modelShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f);
         modelShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
         modelShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
@@ -209,15 +212,45 @@ int main()
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
 
+        // 2B
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
         model = glm::scale(model, glm::vec3(1.5f));
         modelShader.setMat4("model", model);
-        ourModel.Draw(modelShader);
+        twoB.Draw(modelShader);
+
+        //// bocchi
+        //glm::mat4 model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.1f));
+        //modelShader.setMat4("model", model);
+        //bocchi.Draw(modelShader);
+
+        //// kita
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(-1.8f, -0.5f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.1f));
+        //modelShader.setMat4("model", model);
+        //kita.Draw(modelShader);
+
+        //// nijika
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(-3.6f, -0.5f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.1f));
+        //modelShader.setMat4("model", model);
+        //nijika.Draw(modelShader);
+
+        //// ryo
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, glm::vec3(-5.4f, -0.5f, 0.0f));
+        //model = glm::scale(model, glm::vec3(0.1f));
+        //modelShader.setMat4("model", model);
+        //ryo.Draw(modelShader);
+
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-        // also draw the lamp object
+        // render light cube
         lightCubeShader.use();
         lightCubeShader.setVec3("lightColor", lightColor);
 
