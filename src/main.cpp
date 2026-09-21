@@ -63,7 +63,7 @@ float mixCooldownTimer = 0.0f;
 
 float mixValue = 0.3f;
 
-glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 1.0f);
 glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 int main()
@@ -99,8 +99,71 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     Shader ourShader("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading.fs");
-    //Model ourModel("resources/objects/2b-in-kimono/28.glb");
-    Model ourModel("resources/objects/ijichi-nijika/1.fbx");
+    Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
+
+    Model ourModel("resources/objects/2b-in-kimono/28.glb");
+    //Model ourModel("resources/objects/ijichi-nijika/1.fbx");
+
+    float vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+    };
+    // first, configure the cube's VAO (and VBO)
+    unsigned int VBO, lightCubeVAO;
+    glGenVertexArrays(1, &lightCubeVAO);
+    glGenBuffers(1, &VBO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindVertexArray(lightCubeVAO);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // normal attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -115,8 +178,27 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // render cube
+        // orbit
+        //float loopWidth = 1.0;
+        //lightPos.x = loopWidth * cos(glfwGetTime());
+        //lightPos.y = (loopWidth / 2) * sin(2 * glfwGetTime());
+        //lightPos.z = sin(glfwGetTime());
+
+        // render 3d model
         ourShader.use();
+        ourShader.setVec3("light.position", lightPos);
+        ourShader.setVec3("viewPos", camera.Position);
+
+        // light properties
+        ourShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f); // note that all light colors are set at full intensity
+        ourShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+        // material properties
+        ourShader.setVec3("material.ambient", 0.1f, 0.1f, 0.01f);
+        ourShader.setVec3("material.diffuse", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("material.specular", 0.50196078f, 0.50196078f, 0.50196078f);
+        ourShader.setFloat("material.shininess", 32.0f);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
@@ -124,10 +206,25 @@ int main()
         ourShader.setMat4("view", view);
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.01f));
+        model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+        model = glm::scale(model, glm::vec3(1.5f));
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
+
+
+        // also draw the lamp object
+        lightCubeShader.use();
+        lightCubeShader.setVec3("lightColor", lightColor);
+
+        lightCubeShader.setMat4("projection", projection);
+        lightCubeShader.setMat4("view", view);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.15f)); // a smaller cube
+        lightCubeShader.setMat4("model", model);
+
+        glBindVertexArray(lightCubeVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -151,13 +248,10 @@ void toggleFullscreen(GLFWwindow* window)
 
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-
-        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, 0);
+        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
     }
     else
-    {
         glfwSetWindowMonitor(window, NULL, windowedX, windowedY, windowedWidth, windowedHeight, 0);
-    }
     isFullscreen = !isFullscreen;
 }
 
@@ -319,7 +413,7 @@ unsigned int loadTexture(const char* path, GLenum wrapMode, GLenum minFilter, GL
     unsigned char* data = stbi_load(path, &width, &height, &nrChannels, 0);
     if (data)
     {
-        GLenum format;
+        GLenum format = GL_RGB;
         if (nrChannels == 1) format = GL_RED;
         else if (nrChannels == 3) format = GL_RGB;
         else if (nrChannels == 4) format = GL_RGBA;
