@@ -165,6 +165,9 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType 
 	return textures;
 }
 
+#ifdef _WIN32
+#include <windows.h>
+
 // Converts a UTF-8 encoded std::string to a UTF-16 std::wstring for use with Windows wide APIs
 std::wstring Utf8ToWide(const std::string& utf8)
 {
@@ -174,6 +177,18 @@ std::wstring Utf8ToWide(const std::string& utf8)
 	MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1, &wide[0], size);
 	wide.resize(size - 1); // drop the null terminator MultiByteToWideChar counted
 	return wide;
+}
+#endif
+
+static FILE* OpenFileUtf8(const std::string& path)
+{
+#ifdef _WIN32
+    FILE* f = nullptr;
+    _wfopen_s(&f, Utf8ToWide(path).c_str(), L"rb");
+    return f;
+#else
+    return fopen(path.c_str(), "rb");
+#endif
 }
 
 unsigned int Model::TextureFromFile(const char* path, const std::string& directory, bool gamma, const aiScene* scene)
@@ -212,8 +227,7 @@ unsigned int Model::TextureFromFile(const char* path, const std::string& directo
 		std::string filenameOnly = (lastSlash == std::string::npos) ? pathStr : pathStr.substr(lastSlash + 1);
 		std::string filename = directory + '/' + filenameOnly;
 
-		FILE* f = nullptr;
-		_wfopen_s(&f, Utf8ToWide(filename).c_str(), L"rb");
+		FILE* f = OpenFileUtf8(filename);
 		if (f)
 		{
 			data = stbi_load_from_file(f, &width, &height, &nrComponents, 0);
