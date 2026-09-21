@@ -98,6 +98,7 @@ int main()
     }
 
     glEnable(GL_DEPTH_TEST);
+    glfwSwapInterval(0);    // disable vsync
 
     Shader modelShader("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading.fs");
     Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
@@ -213,56 +214,56 @@ int main()
         modelShader.setMat4("view", view);
 
         // 2B
+        // glm::mat4 model = glm::mat4(1.0f);
+        // model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+        // model = glm::scale(model, glm::vec3(1.5f));
+        // modelShader.setMat4("model", model);
+        // twoB.Draw(modelShader);
+
+        // bocchi
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.5f));
+        model = glm::scale(model, glm::vec3(0.1f));
         modelShader.setMat4("model", model);
-        twoB.Draw(modelShader);
+        bocchi.Draw(modelShader);
 
-        //// bocchi
-        //glm::mat4 model = glm::mat4(1.0f);
-        //model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
-        //model = glm::scale(model, glm::vec3(0.1f));
-        //modelShader.setMat4("model", model);
-        //bocchi.Draw(modelShader);
+        // kita
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-1.8f, -0.5f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.1f));
+        modelShader.setMat4("model", model);
+        kita.Draw(modelShader);
 
-        //// kita
-        //model = glm::mat4(1.0f);
-        //model = glm::translate(model, glm::vec3(-1.8f, -0.5f, 0.0f));
-        //model = glm::scale(model, glm::vec3(0.1f));
-        //modelShader.setMat4("model", model);
-        //kita.Draw(modelShader);
+        // nijika
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-3.6f, -0.5f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.1f));
+        modelShader.setMat4("model", model);
+        nijika.Draw(modelShader);
 
-        //// nijika
-        //model = glm::mat4(1.0f);
-        //model = glm::translate(model, glm::vec3(-3.6f, -0.5f, 0.0f));
-        //model = glm::scale(model, glm::vec3(0.1f));
-        //modelShader.setMat4("model", model);
-        //nijika.Draw(modelShader);
-
-        //// ryo
-        //model = glm::mat4(1.0f);
-        //model = glm::translate(model, glm::vec3(-5.4f, -0.5f, 0.0f));
-        //model = glm::scale(model, glm::vec3(0.1f));
-        //modelShader.setMat4("model", model);
-        //ryo.Draw(modelShader);
+        // ryo
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-5.4f, -0.5f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.1f));
+        modelShader.setMat4("model", model);
+        ryo.Draw(modelShader);
 
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         // render light cube
-        lightCubeShader.use();
-        lightCubeShader.setVec3("lightColor", lightColor);
+        // lightCubeShader.use();
+        // lightCubeShader.setVec3("lightColor", lightColor);
 
-        lightCubeShader.setMat4("projection", projection);
-        lightCubeShader.setMat4("view", view);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.15f)); // a smaller cube
-        lightCubeShader.setMat4("model", model);
+        // lightCubeShader.setMat4("projection", projection);
+        // lightCubeShader.setMat4("view", view);
+        // model = glm::mat4(1.0f);
+        // model = glm::translate(model, lightPos);
+        // model = glm::scale(model, glm::vec3(0.15f)); // a smaller cube
+        // lightCubeShader.setMat4("model", model);
 
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        // glBindVertexArray(VAO);
+        // glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -278,15 +279,15 @@ int main()
 }
 
 void updatePerformanceCounter(GLFWwindow* window) {
-    static float lastTime = static_cast<float>(glfwGetTime());
+    static double lastTime = glfwGetTime();
     static int frameCount = 0;
 
-    float currentTime = glfwGetTime();
+    double currentTime = glfwGetTime();
     frameCount++;
 
     if (currentTime - lastTime >= 1.0) {
         float fps = float(frameCount) / (currentTime - lastTime);
-        float msPerFrame = 1000.0f / float(frameCount);
+        float msPerFrame = (currentTime - lastTime) * 1000.0f / float(frameCount);
 
         std::string title = "main | fps: " + std::to_string(int(fps)) +
             " | frame time: " + std::to_string(msPerFrame) + " /ms";
