@@ -41,8 +41,8 @@ unsigned int loadTexture(
 );
 
 // screen size
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+unsigned int SCR_WIDTH = 800;
+unsigned int SCR_HEIGHT = 600;
 
 bool isFullscreen = false;
 int windowedX, windowedY, windowedWidth, windowedHeight;
@@ -267,6 +267,8 @@ void updatePerformanceCounter(GLFWwindow* window) {
 
 void frame_buffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    SCR_WIDTH = width;
+    SCR_HEIGHT = height;
     glViewport(0, 0, width, height);
 }
 
@@ -279,7 +281,8 @@ void toggleFullscreen(GLFWwindow* window)
 
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+
+        glfwSetWindowMonitor(window, NULL, 0, 0, mode->width, mode->height, 0);
     }
     else
         glfwSetWindowMonitor(window, NULL, windowedX, windowedY, windowedWidth, windowedHeight, 0);
