@@ -98,7 +98,7 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    Shader ourShader("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading.fs");
+    Shader modelShader("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading.fs");
     Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
 
     Model ourModel("resources/objects/2b-in-kimono/28.glb");
@@ -179,38 +179,42 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // orbit
-        //float loopWidth = 1.0;
-        //lightPos.x = loopWidth * cos(glfwGetTime());
-        //lightPos.y = (loopWidth / 2) * sin(2 * glfwGetTime());
-        //lightPos.z = sin(glfwGetTime());
+        float loopWidth = 1.0;
+        lightPos.x = loopWidth * cos(glfwGetTime());
+        lightPos.y = (loopWidth / 2) * sin(2 * glfwGetTime());
+        lightPos.z = sin(glfwGetTime());
+
+        // see polygons
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // render 3d model
-        ourShader.use();
-        ourShader.setVec3("light.position", lightPos);
-        ourShader.setVec3("viewPos", camera.Position);
+        modelShader.use();
+        modelShader.setVec3("light.position", lightPos);
+        modelShader.setVec3("viewPos", camera.Position);
 
         // light properties
-        ourShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f); // note that all light colors are set at full intensity
-        ourShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
-        ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        modelShader.setVec3("light.ambient", 1.0f, 1.0f, 1.0f); // note that all light colors are set at full intensity
+        modelShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
+        modelShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
         // material properties
-        ourShader.setVec3("material.ambient", 0.1f, 0.1f, 0.01f);
-        ourShader.setVec3("material.diffuse", 1.0f, 1.0f, 1.0f);
-        ourShader.setVec3("material.specular", 0.50196078f, 0.50196078f, 0.50196078f);
-        ourShader.setFloat("material.shininess", 32.0f);
+        modelShader.setVec3("material.ambient", 0.1f, 0.1f, 0.1f);
+        modelShader.setVec3("material.diffuse", 1.0f, 1.0f, 1.0f);
+        modelShader.setVec3("material.specular", 0.50196078f, 0.50196078f, 0.50196078f);
+        modelShader.setFloat("material.shininess", 16.0f);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        ourShader.setMat4("projection", projection);
-        ourShader.setMat4("view", view);
+        modelShader.setMat4("projection", projection);
+        modelShader.setMat4("view", view);
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
         model = glm::scale(model, glm::vec3(1.5f));
-        ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
+        modelShader.setMat4("model", model);
+        ourModel.Draw(modelShader);
 
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         // also draw the lamp object
         lightCubeShader.use();
