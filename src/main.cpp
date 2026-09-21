@@ -149,14 +149,14 @@ int main()
         -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
     };
     // first, configure the cube's VAO (and VBO)
-    unsigned int VBO, lightCubeVAO;
-    glGenVertexArrays(1, &lightCubeVAO);
+    unsigned int VBO, VAO;
+    glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glBindVertexArray(lightCubeVAO);
+    glBindVertexArray(VAO);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
@@ -228,7 +228,7 @@ int main()
         model = glm::scale(model, glm::vec3(0.15f)); // a smaller cube
         lightCubeShader.setMat4("model", model);
 
-        glBindVertexArray(lightCubeVAO);
+        glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
@@ -236,6 +236,9 @@ int main()
 
         updatePerformanceCounter(window);
     }
+
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
 
     glfwTerminate();
     return 0;
