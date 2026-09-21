@@ -26,6 +26,7 @@ enum Input {
 
 bool wasPressed[10] = { false };
 
+void updatePerformanceCounter(GLFWwindow* window);
 void frame_buffer_size_callback(GLFWwindow* window, int width, int height);
 void toggleFullscreen(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -232,10 +233,33 @@ int main()
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        updatePerformanceCounter(window);
     }
 
     glfwTerminate();
     return 0;
+}
+
+void updatePerformanceCounter(GLFWwindow* window) {
+    static float lastTime = static_cast<float>(glfwGetTime());
+    static int frameCount = 0;
+
+    float currentTime = glfwGetTime();
+    frameCount++;
+
+    if (currentTime - lastTime >= 1.0) {
+        float fps = float(frameCount) / (currentTime - lastTime);
+        float msPerFrame = 1000.0f / float(frameCount);
+
+        std::string title = "main | fps: " + std::to_string(int(fps)) +
+            " | frame time: " + std::to_string(msPerFrame) + " /ms";
+
+        glfwSetWindowTitle(window, title.c_str());
+
+        frameCount = 0;
+        lastTime = currentTime;
+    }
 }
 
 void frame_buffer_size_callback(GLFWwindow* window, int width, int height)
