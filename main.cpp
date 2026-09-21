@@ -40,8 +40,8 @@ unsigned int loadTexture(
 );
 
 // screen size
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+unsigned int SCR_WIDTH = 800;
+unsigned int SCR_HEIGHT = 600;
 
 bool isFullscreen = false;
 int windowedX, windowedY, windowedWidth, windowedHeight;
@@ -96,7 +96,7 @@ int main()
     glEnable(GL_DEPTH_TEST);
 
     Shader ourShader("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading.fs");
-    //Model ourModel("resources/objects/2b-in-kimono/28.glb");
+    // Model ourModel("resources/objects/2b-in-kimono/28.glb");
     Model ourModel("resources/objects/ijichi-nijika/1.fbx");
 
     // render loop
@@ -147,21 +147,15 @@ void toggleFullscreen(GLFWwindow* window)
 {
     if (!isFullscreen)
     {
-        // remember current windowed position/size before switching
         glfwGetWindowPos(window, &windowedX, &windowedY);
         glfwGetWindowSize(window, &windowedWidth, &windowedHeight);
 
         GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-        int monitorX, monitorY;
-        glfwGetMonitorPos(monitor, &monitorX, &monitorY);
         const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-
-        glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
-        glfwSetWindowMonitor(window, NULL, monitorX, monitorY, mode->width, mode->height, 0);
+        glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
     }
     else
     {
-        glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_TRUE);
         glfwSetWindowMonitor(window, NULL, windowedX, windowedY, windowedWidth, windowedHeight, 0);
     }
     isFullscreen = !isFullscreen;
