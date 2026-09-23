@@ -93,5 +93,8 @@
     <None Include="resources\shaders\3.3.model_loading.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="resources\shaders\3.3.model_loading_light.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
