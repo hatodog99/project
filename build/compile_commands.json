@@ -1,0 +1,38 @@
+[
+{
+  "directory": "/home/jason/Documents/hatdog/project/build",
+  "command": "/usr/bin/cc  -I/home/jason/Documents/hatdog/project/includes -g -o CMakeFiles/my_opengl_project.dir/src/glad.c.o -c /home/jason/Documents/hatdog/project/src/glad.c",
+  "file": "/home/jason/Documents/hatdog/project/src/glad.c",
+  "output": "CMakeFiles/my_opengl_project.dir/src/glad.c.o"
+},
+{
+  "directory": "/home/jason/Documents/hatdog/project/build",
+  "command": "/usr/bin/c++  -I/home/jason/Documents/hatdog/project/includes -g -std=gnu++17 -o CMakeFiles/my_opengl_project.dir/src/main.cpp.o -c /home/jason/Documents/hatdog/project/src/main.cpp",
+  "file": "/home/jason/Documents/hatdog/project/src/main.cpp",
+  "output": "CMakeFiles/my_opengl_project.dir/src/main.cpp.o"
+},
+{
+  "directory": "/home/jason/Documents/hatdog/project/build",
+  "command": "/usr/bin/c++  -I/home/jason/Documents/hatdog/project/includes -g -std=gnu++17 -o CMakeFiles/my_opengl_project.dir/src/mesh.cpp.o -c /home/jason/Documents/hatdog/project/src/mesh.cpp",
+  "file": "/home/jason/Documents/hatdog/project/src/mesh.cpp",
+  "output": "CMakeFiles/my_opengl_project.dir/src/mesh.cpp.o"
+},
+{
+  "directory": "/home/jason/Documents/hatdog/project/build",
+  "command": "/usr/bin/c++  -I/home/jason/Documents/hatdog/project/includes -g -std=gnu++17 -o CMakeFiles/my_opengl_project.dir/src/model.cpp.o -c /home/jason/Documents/hatdog/project/src/model.cpp",
+  "file": "/home/jason/Documents/hatdog/project/src/model.cpp",
+  "output": "CMakeFiles/my_opengl_project.dir/src/model.cpp.o"
+},
+{
+  "directory": "/home/jason/Documents/hatdog/project/build",
+  "command": "/usr/bin/c++  -I/home/jason/Documents/hatdog/project/includes -g -std=gnu++17 -o CMakeFiles/my_opengl_project.dir/src/shader_s.cpp.o -c /home/jason/Documents/hatdog/project/src/shader_s.cpp",
+  "file": "/home/jason/Documents/hatdog/project/src/shader_s.cpp",
+  "output": "CMakeFiles/my_opengl_project.dir/src/shader_s.cpp.o"
+},
+{
+  "directory": "/home/jason/Documents/hatdog/project/build",
+  "command": "/usr/bin/c++  -I/home/jason/Documents/hatdog/project/includes -g -std=gnu++17 -o CMakeFiles/my_opengl_project.dir/src/stb_image.cpp.o -c /home/jason/Documents/hatdog/project/src/stb_image.cpp",
+  "file": "/home/jason/Documents/hatdog/project/src/stb_image.cpp",
+  "output": "CMakeFiles/my_opengl_project.dir/src/stb_image.cpp.o"
+}
+]
