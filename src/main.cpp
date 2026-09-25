@@ -216,7 +216,7 @@ int main()
         modelShaderHasLight.setMat4("projection", projection);
         modelShaderHasLight.setMat4("view", view);
 
-        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 model = glm::mat4(1.0f);        
 
         // 2B
         model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
