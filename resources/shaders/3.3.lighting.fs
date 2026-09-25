@@ -1,5 +1,3 @@
-
-
 #version 330 core
 out vec4 FragColor;
 
@@ -32,7 +30,7 @@ void main()
     // ambient
     vec3 ambient = light.ambient * texture(material.diffuse, TexCoords).rgb;
   	
-    // diffuse 
+    //   
     vec3 norm = normalize(Normal);
     // vec3 lightDir = normalize(light.position - FragPos);
     vec3 lightDir = normalize(-light.direction);  

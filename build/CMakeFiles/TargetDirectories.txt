@@ -1,0 +1,3 @@
+/home/jason/Documents/hatdog/project/build/CMakeFiles/my_opengl_project.dir
+/home/jason/Documents/hatdog/project/build/CMakeFiles/edit_cache.dir
+/home/jason/Documents/hatdog/project/build/CMakeFiles/rebuild_cache.dir

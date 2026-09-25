@@ -41,8 +41,8 @@ unsigned int loadTexture(
 );
 
 // screen size
-unsigned int SCR_WIDTH = 1280;
-unsigned int SCR_HEIGHT = 720;
+unsigned int SCR_WIDTH = 853;
+unsigned int SCR_HEIGHT = 480;
 
 bool isFullscreen = false;
 int windowedX, windowedY, windowedWidth, windowedHeight;
@@ -65,6 +65,7 @@ float mixCooldownTimer = 0.0f;
 float mixValue = 0.3f;
 
 glm::vec3 lightPos = glm::vec3(1.0f, 1.0f, 0.8f);
+glm::vec3 lightDir = glm::vec3(-0.2f, -1.0f, -0.3f);
 glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 int main()
@@ -100,13 +101,16 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(0);    // disable vsync
 
-    //Shader modelShaderNoLight("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading.fs");
-    Shader modelShaderHasLight("resources/shaders/3.3.lighting.vs", "resources/shaders/3.3.lighting.fs");
-    //Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
+    Shader modelShaderNoLight("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading.fs");
+    Shader modelShaderHasLight("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading_light.fs");
+
+    Shader lightCasters("resources/shaders/3.3.lighting.vs", "resources/shaders/3.3.lighting.fs");
+
+    Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
 
     Model twoB("resources/objects/2b-in-kimono/28.glb");
     //Model bocchi("resources/objects/goto-hitori/1.fbx");
-    //Model nijika("resources/objects/ijichi-nijika/1.fbx");
+    Model nijika("resources/objects/ijichi-nijika/1.fbx");
     //Model kita("resources/objects/kita-ikuyo/1.fbx");
     //Model ryo("resources/objects/yamada-ryo/1.fbx");
 
@@ -170,19 +174,6 @@ int main()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    glm::vec3 modelPositions[] = {
-    glm::vec3(0.0f,  0.0f,  0.0f),
-    glm::vec3(2.0f,  5.0f, -15.0f),
-    glm::vec3(-1.5f, -2.2f, -2.5f),
-    glm::vec3(-3.8f, -2.0f, -12.3f),
-    glm::vec3(2.4f, -0.4f, -3.5f),
-    glm::vec3(-1.7f,  3.0f, -7.5f),
-    glm::vec3(1.3f, -2.0f, -2.5f),
-    glm::vec3(1.5f,  2.0f, -2.5f),
-    glm::vec3(1.5f,  0.2f, -1.5f),
-    glm::vec3(-1.3f,  1.0f, -1.5f)
-    };
-
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -203,19 +194,23 @@ int main()
         lightPos.z = sin(glfwGetTime());
 
         // see polygons
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // render models
         modelShaderHasLight.use();
-        modelShaderHasLight.setVec3("light.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
+        // lightCasters.setVec3("light.direction", lightDir);
+        modelShaderHasLight.setVec3("light.position", lightPos);
         modelShaderHasLight.setVec3("viewPos", camera.Position);
 
         // light properties
-        modelShaderHasLight.setVec3("light.ambient", glm::vec3(0.2f));
-        modelShaderHasLight.setVec3("light.diffuse", glm::vec3(0.5f));
+        modelShaderHasLight.setVec3("light.ambient", glm::vec3(1.0f));
+        modelShaderHasLight.setVec3("light.diffuse", glm::vec3(1.0f));
         modelShaderHasLight.setVec3("light.specular", glm::vec3(1.0f));
 
         // material properties
+        modelShaderHasLight.setVec3("material.ambient", glm::vec3(0.2f));
+        modelShaderHasLight.setVec3("material.diffuse", glm::vec3(1.0f));
+        modelShaderHasLight.setVec3("material.specular", glm::vec3(0.3f));
         modelShaderHasLight.setFloat("material.shininess", 16.0f);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -223,44 +218,40 @@ int main()
         modelShaderHasLight.setMat4("projection", projection);
         modelShaderHasLight.setMat4("view", view);
 
-        for (unsigned int i = 0; i < 10; i++) {
-            // 2B
-            glm::mat4 model = glm::mat4(1.0f);
-            model = glm::mat4(1.0f);
-            model = glm::translate(model, modelPositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            model = glm::scale(model, glm::vec3(2.0f));
-            modelShaderHasLight.setMat4("model", model);
-            twoB.Draw(modelShaderHasLight);
-        }
+        glm::mat4 model = glm::mat4(1.0f);
+
+        // 2B
+        model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+        model = glm::scale(model, glm::vec3(1.5f));
+        modelShaderHasLight.setMat4("model", model);
+        twoB.Draw(modelShaderHasLight);
 
         // nijika
-        //modelShaderNoLight.use();
-        //modelShaderNoLight.setMat4("projection", projection);
-        //modelShaderNoLight.setMat4("view", view);
+        modelShaderNoLight.use();
+        modelShaderNoLight.setMat4("projection", projection);
+        modelShaderNoLight.setMat4("view", view);
 
-        //model = glm::mat4(1.0f);
-        //model = glm::translate(model, glm::vec3(-1.2f, -1.15f, 0.0f));
-        //model = glm::scale(model, glm::vec3(0.08f));
-        //modelShaderNoLight.setMat4("model", model);
-        //nijika.Draw(modelShaderNoLight);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-1.3f, -1.15f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.08f));
+        modelShaderNoLight.setMat4("model", model);
+        nijika.Draw(modelShaderNoLight);
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         // render light cube
-        //lightCubeShader.use();
-        //lightCubeShader.setVec3("lightColor", lightColor);
+        lightCubeShader.use();
+        lightCubeShader.setVec3("lightColor", lightColor);
 
-        //lightCubeShader.setMat4("projection", projection);
-        //lightCubeShader.setMat4("view", view);
-        //model = glm::mat4(1.0f);
-        //model = glm::translate(model, lightPos);
-        //model = glm::scale(model, glm::vec3(0.15f));
-        //lightCubeShader.setMat4("model", model);
+        lightCubeShader.setMat4("projection", projection);
+        lightCubeShader.setMat4("view", view);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.15f));
+        lightCubeShader.setMat4("model", model);
 
-        //glBindVertexArray(VAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
