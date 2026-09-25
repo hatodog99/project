@@ -102,9 +102,7 @@ int main()
     glfwSwapInterval(0);    // disable vsync
 
     Shader modelShaderNoLight("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading.fs");
-    Shader modelShaderHasLight("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading_light.fs");
-
-    Shader lightCasters("resources/shaders/3.3.lighting.vs", "resources/shaders/3.3.lighting.fs");
+    Shader modelShaderHasLight("resources/shaders/3.3.lighting.vs", "resources/shaders/3.3.lighting.fs");
 
     Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
 
@@ -188,18 +186,18 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // move light
-        float loopWidth = 1.0;
-        lightPos.x = loopWidth * cos(glfwGetTime());
-        lightPos.y = (loopWidth / 2) * sin(2 * glfwGetTime());
-        lightPos.z = sin(glfwGetTime());
+        float loopWidth = 4.0;
+        lightDir.x = loopWidth * cos(glfwGetTime());
+        lightDir.y = (loopWidth / 2) * sin(2 * glfwGetTime());
+        lightDir.z = (loopWidth / 2) * sin(glfwGetTime());
 
         // see polygons
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // render models
         modelShaderHasLight.use();
-        // lightCasters.setVec3("light.direction", lightDir);
-        modelShaderHasLight.setVec3("light.position", lightPos);
+        modelShaderHasLight.setVec3("light.direction", lightDir);
+        //modelShaderHasLight.setVec3("light.position", lightPos);
         modelShaderHasLight.setVec3("viewPos", camera.Position);
 
         // light properties
@@ -208,7 +206,7 @@ int main()
         modelShaderHasLight.setVec3("light.specular", glm::vec3(1.0f));
 
         // material properties
-        modelShaderHasLight.setVec3("material.ambient", glm::vec3(0.2f));
+        //modelShaderHasLight.setVec3("material.ambient", glm::vec3(0.2f));
         modelShaderHasLight.setVec3("material.diffuse", glm::vec3(1.0f));
         modelShaderHasLight.setVec3("material.specular", glm::vec3(0.3f));
         modelShaderHasLight.setFloat("material.shininess", 16.0f);
@@ -227,15 +225,15 @@ int main()
         twoB.Draw(modelShaderHasLight);
 
         // nijika
-        modelShaderNoLight.use();
-        modelShaderNoLight.setMat4("projection", projection);
-        modelShaderNoLight.setMat4("view", view);
+        modelShaderHasLight.use();
+        modelShaderHasLight.setMat4("projection", projection);
+        modelShaderHasLight.setMat4("view", view);
 
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-1.3f, -1.15f, 0.0f));
         model = glm::scale(model, glm::vec3(0.08f));
-        modelShaderNoLight.setMat4("model", model);
-        nijika.Draw(modelShaderNoLight);
+        modelShaderHasLight.setMat4("model", model);
+        nijika.Draw(modelShaderHasLight);
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -246,7 +244,7 @@ int main()
         lightCubeShader.setMat4("projection", projection);
         lightCubeShader.setMat4("view", view);
         model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
+        model = glm::translate(model, -lightDir);
         model = glm::scale(model, glm::vec3(0.15f));
         lightCubeShader.setMat4("model", model);
 
