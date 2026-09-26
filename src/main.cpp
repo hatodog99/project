@@ -64,9 +64,9 @@ float mixCooldownTimer = 0.0f;
 
 float mixValue = 0.3f;
 
-glm::vec3 lightPos = glm::vec3(1.0f, 1.0f, 0.8f);
-glm::vec3 lightDir = glm::vec3(-0.2f, -1.0f, -0.3f);
-glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightDir(-0.2f, -1.0f, -0.3f);
+glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
 int main()
 {
@@ -101,76 +101,98 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(0);    // disable vsync
 
-    Shader modelShaderNoLight("resources/shaders/3.3.model_loading.vs", "resources/shaders/3.3.model_loading.fs");
-    Shader modelShaderHasLight("resources/shaders/3.3.lighting.vs", "resources/shaders/3.3.lighting.fs");
+    //Shader modelShaderNoLight("resources/shaders/3.3.light.vs", "resources/shaders/3.3.model_loading.fs");
+    //Shader DirectionalLightShader("resources/shaders/3.3.light.vs", "resources/shaders/3.3.directional_light.fs");
+    Shader PointLightShader("resources/shaders/3.3.light.vs", "resources/shaders/3.3.point_light.fs");
 
     Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
 
-    Model twoB("resources/objects/2b-in-kimono/28.glb");
-    //Model bocchi("resources/objects/goto-hitori/1.fbx");
+    //Model twoB("resources/objects/2b-in-kimono/28.glb");
     Model nijika("resources/objects/ijichi-nijika/1.fbx");
+    //Model bocchi("resources/objects/goto-hitori/1.fbx");
     //Model kita("resources/objects/kita-ikuyo/1.fbx");
     //Model ryo("resources/objects/yamada-ryo/1.fbx");
 
-    float lightCubeVertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+    float vertices[] = {
+        // positions          // normals           // texture coords
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
 
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f
     };
-    // first, configure the cube's VAO (and VBO)
-    unsigned int VBO, VAO;
-    glGenVertexArrays(1, &VAO);
+    // positions all containers
+    glm::vec3 modelPositions[] = {
+        glm::vec3(0.0f,  0.0f,  0.0f),
+        glm::vec3(2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),
+        glm::vec3(1.5f,  2.0f, -2.5f),
+        glm::vec3(1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+    unsigned int VBO, modelVAO;
+    glGenVertexArrays(1, &modelVAO);
     glGenBuffers(1, &VBO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(lightCubeVertices), lightCubeVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glBindVertexArray(VAO);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glBindVertexArray(modelVAO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    unsigned int lightCubeVAO;
+    glGenVertexArrays(1, &lightCubeVAO);
+    glBindVertexArray(lightCubeVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -186,54 +208,50 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // move light
-        float loopWidth = 4.0;
-        lightDir.x = loopWidth * cos(glfwGetTime());
-        lightDir.y = (loopWidth / 2) * sin(2 * glfwGetTime());
-        lightDir.z = (loopWidth / 2) * sin(glfwGetTime());
-
+        //float loopWidth = 2.0;
+        //lightDir.x = loopWidth * cos(glfwGetTime());
+        //lightDir.y = (loopWidth / 2) * sin(2 * glfwGetTime());
+        //lightDir.z = (loopWidth / 2) * sin(glfwGetTime());
+        
         // see polygons
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // render models
-        modelShaderHasLight.use();
-        modelShaderHasLight.setVec3("light.direction", lightDir);
-        //modelShaderHasLight.setVec3("light.position", lightPos);
-        modelShaderHasLight.setVec3("viewPos", camera.Position);
+        PointLightShader.use();
+        //PointLightShader.setVec3("light.direction", lightDir);
+        PointLightShader.setVec3("light.position", lightPos);
+        PointLightShader.setVec3("viewPos", camera.Position);
 
         // light properties
-        modelShaderHasLight.setVec3("light.ambient", glm::vec3(1.0f));
-        modelShaderHasLight.setVec3("light.diffuse", glm::vec3(1.0f));
-        modelShaderHasLight.setVec3("light.specular", glm::vec3(1.0f));
+        PointLightShader.setVec3("light.ambient", glm::vec3(1.0f));
+        PointLightShader.setVec3("light.diffuse", glm::vec3(1.0f));
+        PointLightShader.setVec3("light.specular", glm::vec3(1.0f));
+        PointLightShader.setFloat("light.constant", 1.0f);
+        PointLightShader.setFloat("light.linear", 0.09f);
+        PointLightShader.setFloat("light.quadratic", 0.032);
 
         // material properties
-        //modelShaderHasLight.setVec3("material.ambient", glm::vec3(0.2f));
-        modelShaderHasLight.setVec3("material.diffuse", glm::vec3(1.0f));
-        modelShaderHasLight.setVec3("material.specular", glm::vec3(0.3f));
-        modelShaderHasLight.setFloat("material.shininess", 16.0f);
+        PointLightShader.setVec3("material.ambient", glm::vec3(0.2f));
+        PointLightShader.setVec3("material.diffuse", glm::vec3(0.8f));
+        PointLightShader.setVec3("material.specular", glm::vec3(0.3f));
+        PointLightShader.setFloat("material.shininess", 16.0f);
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        modelShaderHasLight.setMat4("projection", projection);
-        modelShaderHasLight.setMat4("view", view);
-
-        glm::mat4 model = glm::mat4(1.0f);
-
-        // 2B
-        model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
-        model = glm::scale(model, glm::vec3(1.5f));
-        modelShaderHasLight.setMat4("model", model);
-        twoB.Draw(modelShaderHasLight);
+        PointLightShader.setMat4("projection", projection);
+        PointLightShader.setMat4("view", view);
 
         // nijika
-        modelShaderHasLight.use();
-        modelShaderHasLight.setMat4("projection", projection);
-        modelShaderHasLight.setMat4("view", view);
-
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-1.3f, -1.15f, 0.0f));
-        model = glm::scale(model, glm::vec3(0.08f));
-        modelShaderHasLight.setMat4("model", model);
-        nijika.Draw(modelShaderHasLight);
+        for (unsigned int i = 0; i < 10; i++) 
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, modelPositions[i]);
+            model = glm::scale(model, glm::vec3(0.01f));
+            float angle = 20.0f * i;
+            model = glm::rotate(model, glm::radians(angle), glm::normalize(glm::vec3(1.0f)));
+            PointLightShader.setMat4("model", model);
+            nijika.Draw(PointLightShader);
+        }
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -243,12 +261,13 @@ int main()
 
         lightCubeShader.setMat4("projection", projection);
         lightCubeShader.setMat4("view", view);
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, -lightDir);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
         model = glm::scale(model, glm::vec3(0.15f));
         lightCubeShader.setMat4("model", model);
 
-        glBindVertexArray(VAO);
+        glBindVertexArray(lightCubeVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
@@ -257,7 +276,8 @@ int main()
         updatePerformanceCounter(window);
     }
 
-    glDeleteVertexArrays(1, &VAO);
+    glDeleteVertexArrays(1, &lightCubeVAO);
+    glDeleteVertexArrays(1, &modelVAO);
     glDeleteBuffers(1, &VBO);
 
     glfwTerminate();
@@ -412,7 +432,7 @@ void processInput(GLFWwindow* window)
     wasPressed[DOWN_ARROW] = downDown;
 
     bool f11Down = glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS;
-    if (f11Down && !wasPressed[F11]) {// add F11 to your Input enum + bump wasPressed array size
+    if (f11Down && !wasPressed[F11]) {
         printInput(F11);
         toggleFullscreen(window);
     }
