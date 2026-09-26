@@ -238,8 +238,7 @@ int main()
 
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        PointLightShader.setMat4("projection", projection);
-        PointLightShader.setMat4("view", view);
+
 
         // nijika
         for (unsigned int i = 0; i < 10; i++) 
