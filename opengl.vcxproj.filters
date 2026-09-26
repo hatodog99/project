@@ -87,13 +87,13 @@
     <None Include="resources\shaders\3.3.light.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="resources\shaders\3.3.model_loading.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="resources\shaders\3.3.model_loading_light.fs">
+    <None Include="resources\shaders\3.3.no_light.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="resources\shaders\3.3.point_light.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="resources\shaders\3.3.flashlight.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

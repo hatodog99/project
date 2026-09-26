@@ -186,12 +186,12 @@
     <Image Include="..\..\..\Downloads\wally_pokemon.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\shaders\3.3.flashlight.fs" />
     <None Include="resources\shaders\3.3.light_cube.fs" />
     <None Include="resources\shaders\3.3.light_cube.vs" />
     <None Include="resources\shaders\3.3.directional_light.fs" />
-    <None Include="resources\shaders\3.3.model_loading.fs" />
+    <None Include="resources\shaders\3.3.no_light.fs" />
     <None Include="resources\shaders\3.3.light.vs" />
-    <None Include="resources\shaders\3.3.model_loading_light.fs" />
     <None Include="resources\shaders\3.3.point_light.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

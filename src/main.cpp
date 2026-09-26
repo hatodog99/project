@@ -64,7 +64,7 @@ float mixCooldownTimer = 0.0f;
 
 float mixValue = 0.3f;
 
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPos(1.2f, 1.0f, 0.8f);
 glm::vec3 lightDir(-0.2f, -1.0f, -0.3f);
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
@@ -101,14 +101,15 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glfwSwapInterval(0);    // disable vsync
 
-    //Shader modelShaderNoLight("resources/shaders/3.3.light.vs", "resources/shaders/3.3.model_loading.fs");
-    //Shader DirectionalLightShader("resources/shaders/3.3.light.vs", "resources/shaders/3.3.directional_light.fs");
-    Shader PointLightShader("resources/shaders/3.3.light.vs", "resources/shaders/3.3.point_light.fs");
+    //Shader noLight("resources/shaders/3.3.light.vs", "resources/shaders/3.3.no_light.fs");
+    //Shader directionalLightShader("resources/shaders/3.3.light.vs", "resources/shaders/3.3.directional_light.fs");
+    //Shader pointLightShader("resources/shaders/3.3.light.vs", "resources/shaders/3.3.point_light.fs");
+    Shader flashlightShader("resources/shaders/3.3.light.vs", "resources/shaders/3.3.flashlight.fs");
 
     Shader lightCubeShader("resources/shaders/3.3.light_cube.vs", "resources/shaders/3.3.light_cube.fs");
 
-    //Model twoB("resources/objects/2b-in-kimono/28.glb");
-    Model nijika("resources/objects/ijichi-nijika/1.fbx");
+    Model twoB("resources/objects/2b-in-kimono/28.glb");
+    //Model nijika("resources/objects/ijichi-nijika/1.fbx");
     //Model bocchi("resources/objects/goto-hitori/1.fbx");
     //Model kita("resources/objects/kita-ikuyo/1.fbx");
     //Model ryo("resources/objects/yamada-ryo/1.fbx");
@@ -194,6 +195,8 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    toggleFullscreen(window);
+
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -208,67 +211,80 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // move light
-        //float loopWidth = 2.0;
-        //lightDir.x = loopWidth * cos(glfwGetTime());
-        //lightDir.y = (loopWidth / 2) * sin(2 * glfwGetTime());
-        //lightDir.z = (loopWidth / 2) * sin(glfwGetTime());
+        //float loopWidth = 1.0;
+        //lightPos.x = cos(glfwGetTime());
+        //lightPos.y = (loopWidth / 2) * sin(2 * glfwGetTime());
+        //lightPos.z = sin(glfwGetTime());
         
         // see polygons
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // render models
-        PointLightShader.use();
-        //PointLightShader.setVec3("light.direction", lightDir);
-        PointLightShader.setVec3("light.position", lightPos);
-        PointLightShader.setVec3("viewPos", camera.Position);
+        // ----------------------------------------------
+        flashlightShader.use();
+        //pointLightShader.setVec3("light.position", lightPos);
+        //directionalLightShader.setVec3("light.direction", lightDir);
+
+        // flashlight specific shaders
+        flashlightShader.setVec3("light.position", camera.Position);
+        flashlightShader.setVec3("light.direction", camera.Front);
+        flashlightShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+        flashlightShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+
+        flashlightShader.setVec3("viewPos", camera.Position);
 
         // light properties
-        PointLightShader.setVec3("light.ambient", glm::vec3(1.0f));
-        PointLightShader.setVec3("light.diffuse", glm::vec3(1.0f));
-        PointLightShader.setVec3("light.specular", glm::vec3(1.0f));
-        PointLightShader.setFloat("light.constant", 1.0f);
-        PointLightShader.setFloat("light.linear", 0.09f);
-        PointLightShader.setFloat("light.quadratic", 0.032);
+        // ----------------------------------------------
+        flashlightShader.setVec3("light.ambient", glm::vec3(0.1f));
+        flashlightShader.setVec3("light.diffuse", glm::vec3(1.0f));
+        flashlightShader.setVec3("light.specular", glm::vec3(1.0f));
+
+        // point light & flashlight specific shaders
+        flashlightShader.setFloat("light.constant", 1.0f);
+        flashlightShader.setFloat("light.linear", 0.09f);
+        flashlightShader.setFloat("light.quadratic", 0.032);
 
         // material properties
-        PointLightShader.setVec3("material.ambient", glm::vec3(0.2f));
-        PointLightShader.setVec3("material.diffuse", glm::vec3(0.8f));
-        PointLightShader.setVec3("material.specular", glm::vec3(0.3f));
-        PointLightShader.setFloat("material.shininess", 16.0f);
+        // ----------------------------------------------
+        flashlightShader.setVec3("material.diffuse", glm::vec3(1.0f));
+        flashlightShader.setVec3("material.specular", glm::vec3(0.3f));
+        flashlightShader.setFloat("material.shininess", 16.0f);
 
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(
+            glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f
+        );
         glm::mat4 view = camera.GetViewMatrix();
-        PointLightShader.setMat4("projection", projection);
-        PointLightShader.setMat4("view", view);
-
-        // nijika
-        for (unsigned int i = 0; i < 10; i++) 
+        flashlightShader.setMat4("projection", projection);
+        flashlightShader.setMat4("view", view);
+        
+        // model
+        for (unsigned int i = 0; i < 10; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, modelPositions[i]);
-            model = glm::scale(model, glm::vec3(0.01f));
+            model = glm::scale(model, glm::vec3(1.8));
             float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::normalize(glm::vec3(1.0f)));
-            PointLightShader.setMat4("model", model);
-            nijika.Draw(PointLightShader);
+            model = glm::rotate(model, glm::radians(angle), normalize(glm::vec3(1.0f)));
+            flashlightShader.setMat4("model", model);
+            twoB.Draw(flashlightShader);
         }
 
         //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
         // render light cube
-        lightCubeShader.use();
-        lightCubeShader.setVec3("lightColor", lightColor);
+        //lightCubeShader.use();
+        //lightCubeShader.setVec3("lightColor", lightColor);
 
-        lightCubeShader.setMat4("projection", projection);
-        lightCubeShader.setMat4("view", view);
+        //lightCubeShader.setMat4("projection", projection);
+        //lightCubeShader.setMat4("view", view);
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.15f));
-        lightCubeShader.setMat4("model", model);
+        //model = glm::mat4(1.0f);
+        //model = glm::translate(model, lightPos);
+        //model = glm::scale(model, glm::vec3(0.15f));
+        //lightCubeShader.setMat4("model", model);
 
-        glBindVertexArray(lightCubeVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        //glBindVertexArray(lightCubeVAO);
+        //glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
